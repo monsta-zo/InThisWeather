@@ -13,8 +13,15 @@ function getData() {
   fetch(
     `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${serviceKey}&numOfRows=1000&pageNo=1&dataType=JSON&base_date=${date[0]}&base_time=${date[1]}&nx=98&ny=77`
   )
-    .then((res) => res.json())
-    .then((res) => console.log(res));
+    .then((weatherRes) => weatherRes.json())
+    .then((weatherRes) => console.log(weatherRes));
+
+  // 위치를 기준으로 오늘의 미세먼지 정보 받아옴
+  fetch(
+    `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D&returnType=json&numOfRows=50&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
+  )
+    .then((airRes) => airRes.json())
+    .then((airRes) => console.log(airRes));
 }
 
 // base_date, base_time을 계산하는 함수

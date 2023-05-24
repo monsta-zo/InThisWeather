@@ -1,11 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script defer src="./main.js"></script>
-    <title>Document</title>
+    <title>오늘 같은 날엔</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
+    />
+    <link rel="stylesheet" href="./main.css" />
   </head>
-  <body></body>
+  <body>
+    <header><h1>오늘 같은 날엔</h1></header>
+    <main>
+      <div id="time-input">
+        <div>
+          <input type="radio" id="today" name="day" />
+          <label for="today">오늘</label>
+          <input type="radio" id="tomorrow" name="day" />
+          <label for="tomorrow">내일</label>
+          <input type="radio" id="after-tomorrow" name="day" />
+          <label for="after-tomorrow">모래</label>
+        </div>
+        <p id=""></p>
+        <div>
+          <input type="time" />
+          <span>~</span>
+          <input type="time" />
+        </div>
+        <button>조회</button>
+      </div>
+    </main>
+    <footer></footer>
+  </body>
 </html>
