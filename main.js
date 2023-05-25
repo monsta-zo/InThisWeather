@@ -1,6 +1,7 @@
 getData();
 showToday();
 
+// 오늘의 날짜를 출력하는 함수
 function showToday() {
   const date = new Date();
   const dateContent = document.querySelector("#date");
@@ -9,6 +10,7 @@ function showToday() {
   }월 ${date.getDate()}일`;
 }
 
+// 오늘 / 내일 / 모래의 radio 버튼에 맞게 각각의 날짜를 출력하는 함수
 function showDate(date) {
   const today = new Date();
   const dateContent = document.querySelector("#date");
@@ -26,8 +28,14 @@ function showDate(date) {
   }
 }
 
-// 입력을 기반으로 날씨, 미세먼지 정보 제공
+// 날짜, 시간 입력을 기반으로 날씨, 미세먼지 정보 조회
 function getData() {
+  getWeatherData();
+  getDustData();
+}
+
+// 날씨 정보를 가져오는 함수
+function getWeatherData() {
   // 서비스 키
   const serviceKey =
     "N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D";
@@ -35,14 +43,15 @@ function getData() {
   // base_date, base_time
   const date = getBase();
 
-  // 현재 시각을 기준으로 날짜 정보를 받아옴
   fetch(
     `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${serviceKey}&numOfRows=1000&pageNo=1&dataType=JSON&base_date=${date[0]}&base_time=${date[1]}&nx=98&ny=77`
   )
     .then((weatherRes) => weatherRes.json())
     .then((weatherRes) => console.log(weatherRes));
+}
 
-  // 위치를 기준으로 오늘의 미세먼지 정보 받아옴
+// 위치를 기준으로 오늘의 미세먼지 정보 받아옴
+function getDustData() {
   fetch(
     `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D&returnType=json&numOfRows=50&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
   )
