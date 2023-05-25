@@ -17,14 +17,30 @@
     <main>
       <div id="time-input">
         <div>
-          <input type="radio" id="today" name="day" />
+          <input
+            type="radio"
+            id="today"
+            name="day"
+            checked
+            onclick="showDate('today')"
+          />
           <label for="today">오늘</label>
-          <input type="radio" id="tomorrow" name="day" />
+          <input
+            type="radio"
+            id="tomorrow"
+            name="day"
+            onclick="showDate('tomorrow')"
+          />
           <label for="tomorrow">내일</label>
-          <input type="radio" id="after-tomorrow" name="day" />
+          <input
+            type="radio"
+            id="after-tomorrow"
+            name="day"
+            onclick="showDate('after-tomorrow')"
+          />
           <label for="after-tomorrow">모래</label>
         </div>
-        <p id=""></p>
+        <p id="date"></p>
         <div>
           <input type="time" />
           <span>~</span>

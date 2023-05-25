@@ -1,4 +1,30 @@
 getData();
+showToday();
+
+function showToday() {
+  const date = new Date();
+  const dateContent = document.querySelector("#date");
+  dateContent.textContent = `${date.getFullYear()}년 ${
+    date.getMonth() + 1
+  }월 ${date.getDate()}일`;
+}
+
+function showDate(date) {
+  const today = new Date();
+  const dateContent = document.querySelector("#date");
+  if (date === "today") showToday();
+  else if (date === "tomorrow") {
+    const tomorrow = new Date(today.setDate(today.getDate() + 1));
+    dateContent.textContent = `${tomorrow.getFullYear()}년 ${
+      tomorrow.getMonth() + 1
+    }월 ${tomorrow.getDate()}일`;
+  } else {
+    const afterTomorrow = new Date(today.setDate(today.getDate() + 2));
+    dateContent.textContent = `${afterTomorrow.getFullYear()}년 ${
+      afterTomorrow.getMonth() + 1
+    }월 ${afterTomorrow.getDate()}일`;
+  }
+}
 
 // 입력을 기반으로 날씨, 미세먼지 정보 제공
 function getData() {
