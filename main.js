@@ -32,24 +32,17 @@ function getData() {
   const input = new Object();
   // 지역
   const location = document.querySelector("#location-select").value;
-  input.location = location;
 
   // 날짜
   const date = document.querySelector("#date").textContent;
   const dateRegex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일/;
   const match = date.match(dateRegex);
-  input.date = `${match[1].slice(2)}${match[2].padStart(
-    2,
-    "0"
-  )}${match[3].padStart(2, "0")}`;
 
   // 시작 시간
   const startTime = document.querySelector("#start-time").value;
-  input.startTime = startTime;
 
   // 끝 시간
   const endTime = document.querySelector("#end-time").value;
-  input.endTime = endTime;
 
   // 끝나는 시간, 시작 시간 에러 처리
   if (startTime === "") {
@@ -64,6 +57,14 @@ function getData() {
     return;
   } else {
     document.querySelector("#time-error").textContent = "";
+    input.location = location;
+    input.date = `${match[1].slice(2)}${match[2].padStart(
+      2,
+      "0"
+    )}${match[3].padStart(2, "0")}`;
+    input.startTime = startTime.slice(0, 2).padEnd(4, "0");
+    input.endTime = endTime.slice(0, 2).padEnd(4, "0");
+    console.log(input);
     getWeatherData(input);
     getDustData(input);
   }
