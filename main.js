@@ -1,4 +1,3 @@
-getData();
 showToday();
 
 // 오늘의 날짜를 출력하는 함수
@@ -30,12 +29,34 @@ function showDate(date) {
 
 // 날짜, 시간 입력을 기반으로 날씨, 미세먼지 정보 조회
 function getData() {
-  getWeatherData();
-  getDustData();
+  const input = new Object();
+  // 지역
+  const location = document.querySelector("#location-select").value;
+  input.location = location;
+
+  // 날짜
+  const date = document.querySelector("#date").textContent;
+  const dateRegex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일/;
+  const match = date.match(dateRegex);
+  input.date = `${match[1].slice(2)}${match[2].padStart(
+    2,
+    "0"
+  )}${match[3].padStart(2, "0")}`;
+
+  // 시작 시간
+  const startTime = document.querySelector("#start-time").value;
+  input.startTime = startTime;
+
+  // 끝 시간
+  const endTime = document.querySelector("#end-time").value;
+  input.endTime = endTime;
+
+  getWeatherData(input);
+  getDustData(input);
 }
 
 // 날씨 정보를 가져오는 함수
-function getWeatherData() {
+function getWeatherData(input) {
   // 서비스 키
   const serviceKey =
     "N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D";
@@ -51,7 +72,7 @@ function getWeatherData() {
 }
 
 // 미세먼지 정보를 가져오는 함수
-function getDustData() {
+function getDustData(input) {
   fetch(
     `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D&returnType=json&numOfRows=50&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
   )

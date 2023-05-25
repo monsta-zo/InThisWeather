@@ -15,25 +15,26 @@
   <body>
     <header><h1>오늘 같은 날엔</h1></header>
     <main>
+      <!-- 지역, 날짜, 시간 입력 -->
       <div id="time-input">
-        <label for="">활동 지역</label>
+        <label for="location-select">활동 지역</label>
         <select name="locations" id="location-select">
-          <option value="">금정구</option>
-          <option value="">중구</option>
-          <option value="">서구</option>
-          <option value="">동구</option>
-          <option value="">영도구</option>
-          <option value="">부산진구</option>
-          <option value="">동래구</option>
-          <option value="">남구</option>
-          <option value="">북구</option>
-          <option value="">해운대구</option>
-          <option value="">사하구</option>
-          <option value="">강서구</option>
-          <option value="">연제구</option>
-          <option value="">수영구</option>
-          <option value="">사상구</option>
-          <option value="">기장군</option>
+          <option value="geumjeong">금정구</option>
+          <option value="jung">중구</option>
+          <option value="seo">서구</option>
+          <option value="dong">동구</option>
+          <option value="yeongdo">영도구</option>
+          <option value="busanjin">부산진구</option>
+          <option value="dongrae">동래구</option>
+          <option value="nam">남구</option>
+          <option value="buk">북구</option>
+          <option value="haeundae">해운대구</option>
+          <option value="saha">사하구</option>
+          <option value="gangseo">강서구</option>
+          <option value="yeonje">연제구</option>
+          <option value="suyeong">수영구</option>
+          <option value="sasang">사상구</option>
+          <option value="gijang">기장군</option>
         </select>
         <div>
           <input
@@ -61,12 +62,14 @@
         </div>
         <p id="date"></p>
         <div>
-          <input type="time" />
+          <input type="time" id="start-time" />
           <span>~</span>
-          <input type="time" />
+          <input type="time" id="end-time" />
         </div>
-        <button>조회</button>
+        <button onclick="getData()">조회</button>
       </div>
+      <!-- 조회 결과 출력 -->
+      <div id="data-output"></div>
     </main>
     <footer></footer>
   </body>
