@@ -51,8 +51,22 @@ function getData() {
   const endTime = document.querySelector("#end-time").value;
   input.endTime = endTime;
 
-  getWeatherData(input);
-  getDustData(input);
+  // 끝나는 시간, 시작 시간 에러 처리
+  if (startTime === "") {
+    document.querySelector("#time-error").textContent =
+      "시작 시간을 설정해주세요!";
+  } else if (endTime === "") {
+    document.querySelector("#time-error").textContent =
+      "끝나는 시간을 설정해주세요!";
+  } else if (parseInt(startTime) >= parseInt(endTime)) {
+    document.querySelector("#time-error").textContent =
+      "끝나는 시간이 시작 시간보다 이후여야 해요!";
+    return;
+  } else {
+    document.querySelector("#time-error").textContent = "";
+    getWeatherData(input);
+    getDustData(input);
+  }
 }
 
 // 날씨 정보를 가져오는 함수
@@ -87,8 +101,6 @@ function getDustData(input) {
 // 따라서 6시간 전 정보를 조회한다.
 function getBase() {
   let date = new Date();
-  let month = (date.getMonth() + 1).toString().padStart(2, "0");
-  let day = date.getDate().toString().padStart(2, "0");
   let hour = date.getHours();
 
   if (hour <= 5) {
@@ -97,6 +109,9 @@ function getBase() {
   } else {
     hour -= (hour % 3) + 4;
   }
+
+  let month = (date.getMonth() + 1).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
 
   return [`${date.getFullYear()}${month}${day}`, hour + "00"];
 }
