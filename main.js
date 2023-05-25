@@ -50,7 +50,7 @@ function getWeatherData() {
     .then((weatherRes) => console.log(weatherRes));
 }
 
-// 위치를 기준으로 오늘의 미세먼지 정보 받아옴
+// 미세먼지 정보를 가져오는 함수
 function getDustData() {
   fetch(
     `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D&returnType=json&numOfRows=50&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
