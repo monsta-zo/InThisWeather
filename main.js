@@ -58,20 +58,19 @@ function getData() {
   } else {
     document.querySelector("#time-error").textContent = "";
     input.location = location;
-    input.date = `${match[1].slice(2)}${match[2].padStart(
+    input.date = `${match[1].slice(0, 4)}${match[2].padStart(
       2,
       "0"
     )}${match[3].padStart(2, "0")}`;
     input.startTime = startTime.slice(0, 2).padEnd(4, "0");
     input.endTime = endTime.slice(0, 2).padEnd(4, "0");
-    console.log(input);
     getWeatherData(input);
     getDustData(input);
   }
 }
 
 // 날씨 정보를 가져오는 함수
-function getWeatherData(input) {
+async function getWeatherData(input) {
   // 서비스 키
   const serviceKey =
     "N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D";
@@ -79,17 +78,44 @@ function getWeatherData(input) {
   // base_date, base_time
   const date = getBase();
 
-  fetch(
+  const weatherRes = await fetch(
     `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${serviceKey}&numOfRows=1000&pageNo=1&dataType=JSON&base_date=${date[0]}&base_time=${date[1]}&nx=98&ny=77`
-  )
-    .then((weatherRes) => weatherRes.json())
-    .then((weatherRes) => console.log(weatherRes));
+  );
+
+  const json = await weatherRes.json();
+  console.log("데이터 받음!");
+  const dataArr = json.response.body.items.item;
+  console.log(input.date);
+  // 활동시간에 포함되는 데이터 중 강수확률과 기온만 받아온다.
+  const dataEq = dataArr.filter((data) => {
+    return (
+      data.fcstDate == input.date &&
+      parseInt(data.fcstTime) >= parseInt(input.startTime) &&
+      parseInt(data.fcstTime) <= parseInt(input.endTime) &&
+      (data.category === "POP" || data.category === "TMP")
+    );
+  });
+
+  // 해당시간의 최저기온, 최고기온, 최대강수확률
+  let minTemp = 100;
+  let maxTemp = -100;
+  let rainProb = 0;
+  dataEq.forEach((data) => {
+    if (data.category === "POP") {
+      if (data.fcstValue > rainProb) rainProb = data.fcstValue;
+    } else {
+      if (data.fcstValue > maxTemp) maxTemp = data.fcstValue;
+      if (data.fcstValue < minTemp) minTemp = data.fcstValue;
+    }
+  });
+
+  return [minTemp, maxTemp, rainProb];
 }
 
-// 미세먼지 정보를 가져오는 함수
+//미세먼지 정보를 가져오는 함수
 function getDustData(input) {
   fetch(
-    `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D&returnType=json&numOfRows=50&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
+    `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D&returnType=json&numOfRows=1&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
   )
     .then((airRes) => airRes.json())
     .then((airRes) => console.log(airRes));
