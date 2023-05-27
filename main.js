@@ -27,8 +27,9 @@ function showDate(date) {
   }
 }
 
-// 날짜, 시간 입력을 기반으로 날씨, 미세먼지 정보 조회
-function getData() {
+// 날짜, 시간 입력을 기반으로 날씨, 미세먼지 정보 조회 및
+// 정보에 맞는 결과 출력
+async function getData() {
   const input = new Object();
   // 지역
   const location = document.querySelector("#location-select").value;
@@ -64,9 +65,22 @@ function getData() {
     )}${match[3].padStart(2, "0")}`;
     input.startTime = startTime.slice(0, 2).padEnd(4, "0");
     input.endTime = endTime.slice(0, 2).padEnd(4, "0");
-    getWeatherData(input);
-    getDustData(input);
+
+    const weatherRes = getWeatherData(input);
+    const dustRes = getDustData();
+
+    const [weather, dust] = await Promise.all([weatherRes, dustRes]);
+
+    printInfo(weather, dust);
   }
+}
+
+function printInfo(weather, dust) {
+  const weatherEl = document.querySelector("#weather-info");
+  const dustEl = document.querySelector("#dust-info");
+
+  weatherEl.textContent = `최저기온: ${weather[0]}, 최고기온: ${weather[1]}, 강수확률: ${weather[2]}`;
+  dustEl.textContent = `미세먼지 단계: ${dust}`;
 }
 
 // 날씨 정보를 가져오는 함수
@@ -83,9 +97,7 @@ async function getWeatherData(input) {
   );
 
   const json = await weatherRes.json();
-  console.log("데이터 받음!");
   const dataArr = json.response.body.items.item;
-  console.log(input.date);
   // 활동시간에 포함되는 데이터 중 강수확률과 기온만 받아온다.
   const dataEq = dataArr.filter((data) => {
     return (
@@ -113,12 +125,19 @@ async function getWeatherData(input) {
 }
 
 //미세먼지 정보를 가져오는 함수
-function getDustData(input) {
-  fetch(
-    `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D&returnType=json&numOfRows=1&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
-  )
-    .then((airRes) => airRes.json())
-    .then((airRes) => console.log(airRes));
+async function getDustData() {
+  const serviceKey =
+    "N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D";
+  const dustRes = await fetch(
+    `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=${serviceKey}&returnType=json&numOfRows=1&pageNo=1&stationName=연산동&dataTerm=DAILY&ver=1.0`
+  );
+  const json = await dustRes.json();
+  const { pm25Value } = json.response.body.items[0];
+
+  if (pm25Value >= 75) return "매우 나쁨";
+  else if (pm25Value >= 35) return "나쁨";
+  else if (pm25Value >= 15) return "보통";
+  else return "좋음";
 }
 
 // base_date, base_time을 계산하는 함수
