@@ -1,3 +1,27 @@
+const clothes = {
+  cardigan: "./img/cardigan.png",
+  blazer: "./img/blazer.png",
+  coat: "./img/coat.png",
+  cottonP: "./img/cottonP.png",
+  denim: "./img/denim.png",
+  denimjacket: "./img/denimjacket.png",
+  fishtail: "./img/fishtail.png",
+  hoodie: "./img/hoodie.png",
+  jacket: "./img/jacket.png",
+  knit: "./img/knit.png",
+  leather: "./img/leather.png",
+  linen: "./img/linen.png",
+  longT: "./img/longT.png",
+  ma1: "./img/ma1.png",
+  MTM: "./img/MTM.png",
+  padding: "./img/padding.png",
+  shirt: "./img/shirt.png",
+  shorts: "./img/shorts.png",
+  shortT: "./img/shortT.png",
+  sleeveless: "./img/sleeveless.png",
+  trench: "./img/trench.png",
+};
+
 showToday();
 
 // 오늘의 날짜를 출력하는 함수
@@ -38,15 +62,21 @@ async function getData() {
   const date = document.querySelector("#date").textContent;
   const dateRegex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일/;
   const match = date.match(dateRegex);
-
   // 시작 시간
   const startTime = document.querySelector("#start-time").value;
 
   // 끝 시간
   const endTime = document.querySelector("#end-time").value;
 
+  const now = new Date();
   // 끝나는 시간, 시작 시간 에러 처리
-  if (startTime === "") {
+  if (
+    parseInt(now.getHours()) > parseInt(startTime) &&
+    parseInt(match[3]) === parseInt(now.getDate())
+  ) {
+    document.querySelector("#time-error").textContent =
+      "현재 시각 이후만 조회할 수 있어요!";
+  } else if (startTime === "") {
     document.querySelector("#time-error").textContent =
       "시작 시간을 설정해주세요!";
   } else if (endTime === "") {
@@ -57,6 +87,7 @@ async function getData() {
       "끝나는 시간이 시작 시간보다 이후여야 해요!";
     return;
   } else {
+    document.querySelector("#high").textContent = "로딩중";
     document.querySelector("#time-error").textContent = "";
     input.location = location;
     input.date = `${match[1].slice(0, 4)}${match[2].padStart(
@@ -71,15 +102,20 @@ async function getData() {
 
     const [weather, dust] = await Promise.all([weatherRes, dustRes]);
 
-    printInfo(weather, dust);
+    printData(weather, dust);
   }
 }
 
-function printInfo(weather, dust) {
-  const weatherEl = document.querySelector("#weather-info");
+// 날씨, 미세먼지 정보 출력 함수
+function printData(weather, dust) {
+  const highEl = document.querySelector("#high");
+  const lowEl = document.querySelector("#low");
+  const rainEl = document.querySelector("#rain-info");
   const dustEl = document.querySelector("#dust-info");
 
-  weatherEl.textContent = `최저기온: ${weather[0]}, 최고기온: ${weather[1]}, 강수확률: ${weather[2]}`;
+  lowEl.textContent = `최저기온: ${weather[0]}`;
+  highEl.textContent = `최고기온: ${weather[1]}`;
+  rainEl.textContent = `강수확률: ${weather[2]}`;
   dustEl.textContent = `미세먼지 단계: ${dust}`;
 }
 
