@@ -87,7 +87,7 @@ async function getData() {
       "끝나는 시간이 시작 시간보다 이후여야 해요!";
     return;
   } else {
-    document.querySelector("#high").textContent = "로딩중";
+    document.querySelector("#loading").textContent = "로딩중";
     document.querySelector("#time-error").textContent = "";
     input.location = location;
     input.date = `${match[1].slice(0, 4)}${match[2].padStart(
@@ -102,6 +102,8 @@ async function getData() {
 
     const [weather, dust] = await Promise.all([weatherRes, dustRes]);
 
+    document.querySelector("#loading").textContent = "";
+
     printData(weather, dust);
   }
 }
@@ -114,9 +116,40 @@ function printData(weather, dust) {
   const dustEl = document.querySelector("#dust-info");
 
   lowEl.textContent = `최저기온: ${weather[0]}`;
-  highEl.textContent = `최고기온: ${weather[1]}`;
+  highEl.prepend(`최고기온: ${weather[1]}`);
   rainEl.textContent = `강수확률: ${weather[2]}`;
   dustEl.textContent = `미세먼지 단계: ${dust}`;
+
+  printClothes(weather[0], "low");
+}
+
+function printClothes(temp, scope) {
+  temp = 28;
+  const topEl = document.querySelector(".top .clothes");
+  if (temp >= 27) {
+    const tops = ["sleeveless", "shortT"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    document.querySelector('.top .clothes').addEventListener('click', ()=>{
+
+    })
+  } else if (23 <= temp && temp < 27) {
+  } else if (20 <= temp && temp < 23) {
+  } else if (17 <= temp && temp < 20) {
+  } else if (12 <= temp && temp < 17) {
+  } else if (9 <= temp && temp < 12) {
+  } else if (5 <= temp && temp < 9) {
+  } else {
+  }
+}
+
+function btnEvent(type, length) {
+  const nextBtn = document.querySelector(`.${type} .next`);
+  nextBtn.addEventListener("click", () => {
+    const clothesEl = document.querySelector(`.${type} .clothes`);
+    console.log("Hello");
+  });
 }
 
 // 날씨 정보를 가져오는 함수
