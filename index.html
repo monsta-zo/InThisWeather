@@ -74,27 +74,62 @@
         <p id="loading"></p>
         <div id="weather-info">
           <div id="high">
+            <p id="high-temp"></p>
             <div class="outer">
-              <img src="" alt="" />
-              <div class="prev">&#60;</div>
+              <div class="prev" onclick="prevItem(event)">&#60;</div>
               <div class="window">
                 <div class="clothes"></div>
               </div>
-              <div>&#62;</div>
+              <div class="next" onclick="nextItem(event)">&#62;</div>
             </div>
             <div class="top">
-              <div class="prev">&#60;</div>
+              <div class="prev" onclick="prevItem(event)">&#60;</div>
               <div class="window">
                 <div class="clothes"></div>
               </div>
-              <div class="next">&#62;</div>
+              <div class="next" onclick="nextItem(event)">&#62;</div>
             </div>
-            <div class="bottom"></div>
+            <div class="bottom">
+              <div class="prev" onclick="prevItem(event)">&#60;</div>
+              <div class="window">
+                <div class="clothes"></div>
+              </div>
+              <div class="next" onclick="nextItem(event)">&#62;</div>
+            </div>
           </div>
-          <div id="low"></div>
+          <div id="low">
+            <p id="low-temp"></p>
+            <div class="outer">
+              <div class="prev" onclick="prevItem(event)">&#60;</div>
+              <div class="window">
+                <div class="clothes"></div>
+              </div>
+              <div class="next" onclick="nextItem(event)">&#62;</div>
+            </div>
+            <div class="top">
+              <div class="prev" onclick="prevItem(event)">&#60;</div>
+              <div class="window">
+                <div class="clothes"></div>
+              </div>
+              <div class="next" onclick="nextItem(event)">&#62;</div>
+            </div>
+            <div class="bottom">
+              <div class="prev" onclick="prevItem(event)">&#60;</div>
+              <div class="window">
+                <div class="clothes"></div>
+              </div>
+              <div class="next" onclick="nextItem(event)">&#62;</div>
+            </div>
+          </div>
         </div>
-        <div id="rain-info"></div>
-        <div id="dust-info"></div>
+        <div id="rain">
+          <p id="rain-info"></p>
+          <p id="rain-message"></p>
+        </div>
+        <div id="dust">
+          <p id="dust-info"></p>
+          <p id="dust-message"></p>
+        </div>
       </div>
     </main>
     <footer></footer>

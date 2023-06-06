@@ -22,6 +22,13 @@ const clothes = {
   trench: "./img/trench.png",
 };
 
+let lowOuterIndex = 0;
+let lowTopIndex = 0;
+let lowBottomIndex = 0;
+let highOuterIndex = 0;
+let highTopIndex = 0;
+let highBottomIndex = 0;
+
 showToday();
 
 // 오늘의 날짜를 출력하는 함수
@@ -110,46 +117,283 @@ async function getData() {
 
 // 날씨, 미세먼지 정보 출력 함수
 function printData(weather, dust) {
-  const highEl = document.querySelector("#high");
-  const lowEl = document.querySelector("#low");
+  const highEl = document.querySelector("#high-temp");
+  const lowEl = document.querySelector("#low-temp");
   const rainEl = document.querySelector("#rain-info");
   const dustEl = document.querySelector("#dust-info");
 
   lowEl.textContent = `최저기온: ${weather[0]}`;
-  highEl.prepend(`최고기온: ${weather[1]}`);
+  highEl.textContent = `최고기온: ${weather[1]}`;
   rainEl.textContent = `강수확률: ${weather[2]}`;
   dustEl.textContent = `미세먼지 단계: ${dust}`;
 
+  printClothes(weather[1], "high");
   printClothes(weather[0], "low");
+  printRain(weather[2]);
+  printDust(dust);
 }
 
 function printClothes(temp, scope) {
-  temp = 28;
-  const topEl = document.querySelector(".top .clothes");
+  const outerEl = document.querySelector(`#${scope} .outer .clothes`);
+  outerEl.innerHTML = "";
+  const topEl = document.querySelector(`#${scope} .top .clothes`);
+  topEl.innerHTML = "";
+  const bottomEl = document.querySelector(`#${scope} .bottom .clothes`);
+  bottomEl.innerHTML = "";
   if (temp >= 27) {
     const tops = ["sleeveless", "shortT"];
     tops.forEach((top) => {
       topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
     });
-    document.querySelector('.top .clothes').addEventListener('click', ()=>{
-
-    })
+    const bottoms = ["shorts"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   } else if (23 <= temp && temp < 27) {
+    const tops = ["shortT", "linen", "longT"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    const bottoms = ["shorts", "cottonP", "denim"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   } else if (20 <= temp && temp < 23) {
+    const tops = ["longT", "shortT", "shirt", "MTM"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    const bottoms = ["cottonP", "denim"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   } else if (17 <= temp && temp < 20) {
+    const outers = ["cardigan"];
+    outers.forEach((outer) => {
+      outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
+    });
+    const tops = ["knit", "MTM", "hoodie", "longT"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    const bottoms = ["denim", "cottonP"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   } else if (12 <= temp && temp < 17) {
+    const outers = ["blazer", "denimjacket", "jacket"];
+    outers.forEach((outer) => {
+      outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
+    });
+    const tops = ["longT", "MTM", "knit", "hoodie"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    const bottoms = ["denim", "cottonP"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   } else if (9 <= temp && temp < 12) {
+    const outers = ["coat", "fishtail", "ma1"];
+    outers.forEach((outer) => {
+      outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
+    });
+    const tops = ["knit", "MTM", "hoodie"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    const bottoms = ["denim", "cottonP"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   } else if (5 <= temp && temp < 9) {
+    const outers = ["coat", "leather"];
+    outers.forEach((outer) => {
+      outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
+    });
+    const tops = ["knit", "MTM", "hoodie"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    const bottoms = ["denim", "cottonP"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   } else {
+    const outers = ["padding", "coat"];
+    outers.forEach((outer) => {
+      outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
+    });
+    const tops = ["knit", "MTM", "hoodie", "cardigan"];
+    tops.forEach((top) => {
+      topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
+    });
+    const bottoms = ["denim", "cottonP"];
+    bottoms.forEach((bottom) => {
+      bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
+    });
   }
 }
 
-function btnEvent(type, length) {
-  const nextBtn = document.querySelector(`.${type} .next`);
-  nextBtn.addEventListener("click", () => {
-    const clothesEl = document.querySelector(`.${type} .clothes`);
-    console.log("Hello");
-  });
+function printRain(rain) {
+  const rainEl = document.querySelector("#rain-message");
+  if (rain > 60) {
+    rainEl.textContent = "비가 올 확률이 높아요";
+  } else if (rain > 30) {
+    rainEl.textContent = "살짝 흐리지만 비는 안 올것 같아요";
+  } else {
+    rainEl.textContent = "아주 쨍쨍한 날씨에요!";
+  }
+}
+
+function printDust(dust) {
+  const dustEl = document.querySelector("#dust-message");
+  if (dust === "좋음") {
+    dustEl.textContent = "마스크를 착용하지 않아도 되겠어요";
+  } else if (dust === "보통") {
+    dustEl.textContent =
+      "마스크를 착용하지 않거나 가볍게 덴탈 마스크를 쓰고 나가도 될것 같아요";
+  } else {
+    dustEl.textContent = "미세먼지가 많아요. KF 마스크를 착용해야겠어요";
+  }
+}
+
+function prevItem(event) {
+  // console.log(event.target.nextElementSibling.children[0].childNodes.length);
+  if (event.target.parentElement.classList.contains("outer")) {
+    if (event.target.parentElement.parentElement.id === "high") {
+      if (highOuterIndex > 0) {
+        highOuterIndex--;
+        event.target.nextElementSibling.children[0].style.transform = `translateX(${
+          highOuterIndex * -300
+        }px)`;
+      }
+    }
+    if (event.target.parentElement.parentElement.id === "low") {
+      if (lowOuterIndex > 0) {
+        lowOuterIndex--;
+        event.target.nextElementSibling.children[0].style.transform = `translateX(${
+          lowOuterIndex * -300
+        }px)`;
+      }
+    }
+  }
+  if (event.target.parentElement.classList.contains("top")) {
+    if (event.target.parentElement.parentElement.id === "high") {
+      if (highTopIndex > 0) {
+        highTopIndex--;
+        event.target.nextElementSibling.children[0].style.transform = `translateX(${
+          highTopIndex * -300
+        }px)`;
+      }
+      console.log(event.target.nextElementSibling.children[0].style.transform);
+    }
+    if (event.target.parentElement.parentElement.id === "low") {
+      if (lowTopIndex > 0) {
+        lowTopIndex--;
+        event.target.nextElementSibling.children[0].style.transform = `translateX(${
+          lowTopIndex * -300
+        }px)`;
+      }
+    }
+  }
+  if (event.target.parentElement.classList.contains("bottom")) {
+    if (event.target.parentElement.parentElement.id === "high") {
+      if (highBottomIndex > 0) {
+        highBottomIndex--;
+        event.target.nextElementSibling.children[0].style.transform = `translateX(${
+          highBottomIndex * -300
+        }px)`;
+      }
+    }
+    if (event.target.parentElement.parentElement.id === "low") {
+      if (lowBottomIndex > 0) {
+        lowBottomIndex--;
+        event.target.nextElementSibling.children[0].style.transform = `translateX(${
+          lowBottomIndex * -300
+        }px)`;
+      }
+    }
+  }
+}
+
+function nextItem(event) {
+  // console.log(event.target.nextElementSibling.children[0].childNodes.length);
+  if (event.target.parentElement.classList.contains("outer")) {
+    if (event.target.parentElement.parentElement.id === "high") {
+      if (
+        highOuterIndex <
+        event.target.previousElementSibling.children[0].childNodes.length - 1
+      ) {
+        highOuterIndex++;
+        event.target.previousElementSibling.children[0].style.transform = `translateX(${
+          highOuterIndex * -300
+        }px)`;
+      }
+    }
+    if (event.target.parentElement.parentElement.id === "low") {
+      if (
+        lowOuterIndex <
+        event.target.previousElementSibling.children[0].childNodes.length - 1
+      ) {
+        lowOuterIndex++;
+        event.target.previousElementSibling.children[0].style.transform = `translateX(${
+          lowOuterIndex * -300
+        }px)`;
+      }
+    }
+  }
+  if (event.target.parentElement.classList.contains("top")) {
+    if (event.target.parentElement.parentElement.id === "high") {
+      if (
+        highTopIndex <
+        event.target.previousElementSibling.children[0].childNodes.length - 1
+      ) {
+        highTopIndex++;
+        event.target.previousElementSibling.children[0].style.transform = `translateX(${
+          highTopIndex * -300
+        }px)`;
+      }
+      console.log(
+        event.target.previousElementSibling.children[0].style.transform
+      );
+    }
+    if (event.target.parentElement.parentElement.id === "low") {
+      if (
+        lowTopIndex <
+        event.target.previousElementSibling.children[0].childNodes.length - 1
+      ) {
+        lowTopIndex++;
+        event.target.previousElementSibling.children[0].style.transform = `translateX(${
+          lowTopIndex * -300
+        }px)`;
+      }
+    }
+  }
+  if (event.target.parentElement.classList.contains("bottom")) {
+    if (event.target.parentElement.parentElement.id === "high") {
+      if (
+        highBottomIndex <
+        event.target.previousElementSibling.children[0].childNodes.length - 1
+      ) {
+        highBottomIndex++;
+        event.target.previousElementSibling.children[0].style.transform = `translateX(${
+          highBottomIndex * -300
+        }px)`;
+      }
+    }
+    if (event.target.parentElement.parentElement.id === "low") {
+      if (
+        lowBottomIndex <
+        event.target.previousElementSibling.children[0].childNodes.length - 1
+      ) {
+        lowBottomIndex++;
+        event.target.previousElementSibling.children[0].style.transform = `translateX(${
+          lowBottomIndex * -300
+        }px)`;
+      }
+    }
+  }
 }
 
 // 날씨 정보를 가져오는 함수
@@ -228,5 +472,8 @@ function getBase() {
   let month = (date.getMonth() + 1).toString().padStart(2, "0");
   let day = date.getDate().toString().padStart(2, "0");
 
-  return [`${date.getFullYear()}${month}${day}`, hour + "00"];
+  return [
+    `${date.getFullYear()}${month}${day}`,
+    hour.toString().padStart(2, "0") + "00",
+  ];
 }
