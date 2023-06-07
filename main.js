@@ -31,18 +31,20 @@ let highBottomIndex = 0;
 
 showToday();
 
-// 오늘의 날짜를 출력하는 함수
+// 기본적으로 오늘의 날짜를 출력
 function showToday() {
   const date = new Date();
+  // DOM 활용 1
   const dateContent = document.querySelector("#date");
   dateContent.textContent = `${date.getFullYear()}년 ${
     date.getMonth() + 1
   }월 ${date.getDate()}일`;
 }
 
-// 오늘 / 내일 / 모래의 radio 버튼에 맞게 각각의 날짜를 출력하는 함수
+// 오늘, 내일, 모래 날짜 출력
 function showDate(date) {
   const today = new Date();
+  // DOM 활용 2
   const dateContent = document.querySelector("#date");
   if (date === "today") showToday();
   else if (date === "tomorrow") {
@@ -61,6 +63,8 @@ function showDate(date) {
 // 날짜, 시간 입력을 기반으로 날씨, 미세먼지 정보 조회 및
 // 정보에 맞는 결과 출력
 async function getData() {
+  // DOM 활용 3
+  document.querySelector("#data-output").style.display = "none";
   const input = new Object();
   // 지역
   const location = document.querySelector("#location-select").value;
@@ -76,7 +80,11 @@ async function getData() {
   const endTime = document.querySelector("#end-time").value;
 
   const now = new Date();
-  // 끝나는 시간, 시작 시간 에러 처리
+
+  //// 에러 핸들링 및 입력 Format
+  // 1. 시각이 현재 시각 이전인 경우
+  // 2. 시간을 설정하지 않은 경우
+  // 3. 끝나는 시간이 더 이전인 경우
   if (
     parseInt(now.getHours()) > parseInt(startTime) &&
     parseInt(match[3]) === parseInt(now.getDate())
@@ -94,7 +102,8 @@ async function getData() {
       "끝나는 시간이 시작 시간보다 이후여야 해요!";
     return;
   } else {
-    document.querySelector("#loading").textContent = "로딩중";
+    document.querySelector("#data-loading").style.display = "block";
+    document.querySelector("#loading").textContent = "결과를 불러오는 중이에요";
     document.querySelector("#time-error").textContent = "";
     input.location = location;
     input.date = `${match[1].slice(0, 4)}${match[2].padStart(
@@ -109,23 +118,25 @@ async function getData() {
 
     const [weather, dust] = await Promise.all([weatherRes, dustRes]);
 
-    document.querySelector("#loading").textContent = "";
+    document.querySelector("#loading").textContent =
+      "아래에서 결과를 확인하세요";
+    document.querySelector("#data-output").style.display = "flex";
 
     printData(weather, dust);
   }
 }
 
-// 날씨, 미세먼지 정보 출력 함수
+// 기능 시나리오 1 : 날씨, 미세먼지 정보 출력
 function printData(weather, dust) {
+  // DOM 활용 4
   const highEl = document.querySelector("#high-temp");
   const lowEl = document.querySelector("#low-temp");
   const rainEl = document.querySelector("#rain-info");
   const dustEl = document.querySelector("#dust-info");
-
-  lowEl.textContent = `최저기온: ${weather[0]}`;
-  highEl.textContent = `최고기온: ${weather[1]}`;
-  rainEl.textContent = `강수확률: ${weather[2]}`;
-  dustEl.textContent = `미세먼지 단계: ${dust}`;
+  lowEl.textContent = `${weather[0]}°C`;
+  highEl.textContent = `${weather[1]}°C`;
+  rainEl.textContent = `${weather[2]}%`;
+  dustEl.textContent = `${dust}`;
 
   printClothes(weather[1], "high");
   printClothes(weather[0], "low");
@@ -133,7 +144,11 @@ function printData(weather, dust) {
   printDust(dust);
 }
 
+// 기능 시나리오 2 : 기온에 맞게 추천하는 옷차림 출력
+// 이미지 슬라이드 형식 구현
 function printClothes(temp, scope) {
+  // DOM 활용 5
+  // 이후에 계속 활용
   const outerEl = document.querySelector(`#${scope} .outer .clothes`);
   outerEl.innerHTML = "";
   const topEl = document.querySelector(`#${scope} .top .clothes`);
@@ -141,6 +156,7 @@ function printClothes(temp, scope) {
   const bottomEl = document.querySelector(`#${scope} .bottom .clothes`);
   bottomEl.innerHTML = "";
   if (temp >= 27) {
+    document.querySelector(`#${scope}-temp`).style.color = "#ff5d5d";
     const tops = ["sleeveless", "shortT"];
     tops.forEach((top) => {
       topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
@@ -150,6 +166,7 @@ function printClothes(temp, scope) {
       bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
     });
   } else if (23 <= temp && temp < 27) {
+    document.querySelector(`#${scope}-temp`).style.color = "#ff682e";
     const tops = ["shortT", "linen", "longT"];
     tops.forEach((top) => {
       topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
@@ -159,6 +176,7 @@ function printClothes(temp, scope) {
       bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
     });
   } else if (20 <= temp && temp < 23) {
+    document.querySelector(`#${scope}-temp`).style.color = "#ffb832";
     const tops = ["longT", "shortT", "shirt", "MTM"];
     tops.forEach((top) => {
       topEl.innerHTML += `<img class="clothes-img" src=${clothes[top]} />`;
@@ -168,6 +186,7 @@ function printClothes(temp, scope) {
       bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
     });
   } else if (17 <= temp && temp < 20) {
+    document.querySelector(`#${scope}-temp`).style.color = "#6b9309";
     const outers = ["cardigan"];
     outers.forEach((outer) => {
       outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
@@ -181,6 +200,7 @@ function printClothes(temp, scope) {
       bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
     });
   } else if (12 <= temp && temp < 17) {
+    document.querySelector(`#${scope}-temp`).style.color = "#ffb8ff";
     const outers = ["blazer", "denimjacket", "jacket"];
     outers.forEach((outer) => {
       outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
@@ -194,6 +214,7 @@ function printClothes(temp, scope) {
       bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
     });
   } else if (9 <= temp && temp < 12) {
+    document.querySelector(`#${scope}-temp`).style.color = "#1d8fff";
     const outers = ["coat", "fishtail", "ma1"];
     outers.forEach((outer) => {
       outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
@@ -207,6 +228,7 @@ function printClothes(temp, scope) {
       bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
     });
   } else if (5 <= temp && temp < 9) {
+    document.querySelector(`#${scope}-temp`).style.color = "#b8e6ff";
     const outers = ["coat", "leather"];
     outers.forEach((outer) => {
       outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
@@ -220,6 +242,7 @@ function printClothes(temp, scope) {
       bottomEl.innerHTML += `<img class="clothes-img" src=${clothes[bottom]} />`;
     });
   } else {
+    document.querySelector(`#${scope}-temp`).style.color = "#c99fff";
     const outers = ["padding", "coat"];
     outers.forEach((outer) => {
       outerEl.innerHTML += `<img class="clothes-img" src=${clothes[outer]} />`;
@@ -235,29 +258,46 @@ function printClothes(temp, scope) {
   }
 }
 
+// 기능 시나리오 3 : 강수확률에 맞는 정보 출력
 function printRain(rain) {
   const rainEl = document.querySelector("#rain-message");
+  const rainImg = document.querySelector(".rain-img");
   if (rain > 60) {
-    rainEl.textContent = "비가 올 확률이 높아요";
+    rainEl.textContent = "우산을 반드시 챙겨야 해요!";
+    rainImg.src = "./img/rainy.png";
+    rainImg.nextElementSibling.style.color = "#1b9aff";
+    document.querySelector("#rain-img").src = "./img/umb.png";
   } else if (rain > 30) {
-    rainEl.textContent = "살짝 흐리지만 비는 안 올것 같아요";
+    rainEl.textContent = "접이식 우산을 가방에 넣어 다니세요!";
+    rainImg.src = "./img/cloudy.png";
+    rainImg.nextElementSibling.style.color = "#8d97ac";
+    document.querySelector("#rain-img").src = "./img/umb2.png";
   } else {
-    rainEl.textContent = "아주 쨍쨍한 날씨에요!";
+    rainEl.textContent = "우산은 필요 없을 것 같아요";
+    rainImg.src = "./img/sunny.png";
+    document.querySelector("#rain-img").src = "./img/sunny.png";
+    rainImg.nextElementSibling.style.color = "#4fc534";
   }
 }
 
+// 기능 시나리오 4 : 미세먼지 수치에 맞는 정보 출력
 function printDust(dust) {
   const dustEl = document.querySelector("#dust-message");
   if (dust === "좋음") {
     dustEl.textContent = "마스크를 착용하지 않아도 되겠어요";
+    document.querySelector("#dust-info").style.color = "rgb(27, 154, 255)";
+    document.querySelector("#dust-img").src = "./img/nomask.png";
   } else if (dust === "보통") {
-    dustEl.textContent =
-      "마스크를 착용하지 않거나 가볍게 덴탈 마스크를 쓰고 나가도 될것 같아요";
+    dustEl.textContent = "가볍게 덴탈 마스크를 쓰고 나가도 되겠어요";
+    document.querySelector("#dust-img").src = "./img/dental.png";
   } else {
-    dustEl.textContent = "미세먼지가 많아요. KF 마스크를 착용해야겠어요";
+    dustEl.textContent = "KF 마스크를 착용해야겠어요";
+    document.querySelector("#dust-info").style.color = "red";
+    document.querySelector("#dust-img").src = "./img/df.png";
   }
 }
 
+// 이미지 슬라이드 : 이전 이미지
 function prevItem(event) {
   // console.log(event.target.nextElementSibling.children[0].childNodes.length);
   if (event.target.parentElement.classList.contains("outer")) {
@@ -265,7 +305,7 @@ function prevItem(event) {
       if (highOuterIndex > 0) {
         highOuterIndex--;
         event.target.nextElementSibling.children[0].style.transform = `translateX(${
-          highOuterIndex * -300
+          highOuterIndex * -200
         }px)`;
       }
     }
@@ -273,7 +313,7 @@ function prevItem(event) {
       if (lowOuterIndex > 0) {
         lowOuterIndex--;
         event.target.nextElementSibling.children[0].style.transform = `translateX(${
-          lowOuterIndex * -300
+          lowOuterIndex * -200
         }px)`;
       }
     }
@@ -283,7 +323,7 @@ function prevItem(event) {
       if (highTopIndex > 0) {
         highTopIndex--;
         event.target.nextElementSibling.children[0].style.transform = `translateX(${
-          highTopIndex * -300
+          highTopIndex * -200
         }px)`;
       }
       console.log(event.target.nextElementSibling.children[0].style.transform);
@@ -292,7 +332,7 @@ function prevItem(event) {
       if (lowTopIndex > 0) {
         lowTopIndex--;
         event.target.nextElementSibling.children[0].style.transform = `translateX(${
-          lowTopIndex * -300
+          lowTopIndex * -200
         }px)`;
       }
     }
@@ -302,7 +342,7 @@ function prevItem(event) {
       if (highBottomIndex > 0) {
         highBottomIndex--;
         event.target.nextElementSibling.children[0].style.transform = `translateX(${
-          highBottomIndex * -300
+          highBottomIndex * -200
         }px)`;
       }
     }
@@ -310,13 +350,14 @@ function prevItem(event) {
       if (lowBottomIndex > 0) {
         lowBottomIndex--;
         event.target.nextElementSibling.children[0].style.transform = `translateX(${
-          lowBottomIndex * -300
+          lowBottomIndex * -200
         }px)`;
       }
     }
   }
 }
 
+// 이미지 슬라이드 : 다음 이미지
 function nextItem(event) {
   // console.log(event.target.nextElementSibling.children[0].childNodes.length);
   if (event.target.parentElement.classList.contains("outer")) {
@@ -327,7 +368,7 @@ function nextItem(event) {
       ) {
         highOuterIndex++;
         event.target.previousElementSibling.children[0].style.transform = `translateX(${
-          highOuterIndex * -300
+          highOuterIndex * -200
         }px)`;
       }
     }
@@ -338,7 +379,7 @@ function nextItem(event) {
       ) {
         lowOuterIndex++;
         event.target.previousElementSibling.children[0].style.transform = `translateX(${
-          lowOuterIndex * -300
+          lowOuterIndex * -200
         }px)`;
       }
     }
@@ -351,7 +392,7 @@ function nextItem(event) {
       ) {
         highTopIndex++;
         event.target.previousElementSibling.children[0].style.transform = `translateX(${
-          highTopIndex * -300
+          highTopIndex * -200
         }px)`;
       }
       console.log(
@@ -365,7 +406,7 @@ function nextItem(event) {
       ) {
         lowTopIndex++;
         event.target.previousElementSibling.children[0].style.transform = `translateX(${
-          lowTopIndex * -300
+          lowTopIndex * -200
         }px)`;
       }
     }
@@ -378,7 +419,7 @@ function nextItem(event) {
       ) {
         highBottomIndex++;
         event.target.previousElementSibling.children[0].style.transform = `translateX(${
-          highBottomIndex * -300
+          highBottomIndex * -200
         }px)`;
       }
     }
@@ -389,14 +430,17 @@ function nextItem(event) {
       ) {
         lowBottomIndex++;
         event.target.previousElementSibling.children[0].style.transform = `translateX(${
-          lowBottomIndex * -300
+          lowBottomIndex * -200
         }px)`;
       }
     }
   }
 }
 
+//// Open API 1
 // 날씨 정보를 가져오는 함수
+
+//// AJAX 활용
 async function getWeatherData(input) {
   // 서비스 키
   const serviceKey =
@@ -437,7 +481,10 @@ async function getWeatherData(input) {
   return [minTemp, maxTemp, rainProb];
 }
 
+//// Open API 2
 //미세먼지 정보를 가져오는 함수
+
+//// AJAX 활용
 async function getDustData() {
   const serviceKey =
     "N7wqZh%2BlxJdvTV9uGGFyCoDaNbAyZaewIcPVdBVZczBKGifygfW7fNkVTag7Xeg83K%2Ft9AP7Wg4DyBKezlt%2BRw%3D%3D";

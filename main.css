@@ -1,26 +1,287 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
+
 html {
   font-size: 16px;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 header {
-  border-bottom: 1px solid black;
-  padding: 10px;
+  height: 100vh;
+  background-image: url("./img/bg.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-header h1 {
-  text-align: center;
-  font-size: 2rem;
-}
-
-#time-input {
+/* flex 한번 이상 사용 */
+/* 이후에 계속 사용 */
+/* combinator 1 */
+header > div {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 85vh;
+}
+
+/* combinator 2 */
+header > div > .title {
+  color: rgba(255, 255, 255, 0.834);
+  font-weight: 300;
+  font-size: 4rem;
+  text-shadow: 5px 5px 10px #000000;
+}
+
+/* combinator 3 */
+header > p {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.834);
+  font-size: 2rem;
+  text-shadow: 5px 5px 10px #000000;
+  margin-bottom: 20px;
+}
+main {
+  background-image: url("./img/bg2.jpeg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+#time-input {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+/* Pseudo-class 1 */
+#time-input > div:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  height: 10vh;
+  background-color: rgba(255, 255, 255, 0.915);
+  width: 500px;
+  border-radius: 10px;
+}
+
+.info-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 10px;
+  color: rgb(182, 153, 138);
+}
+
+/* attribute selector 1 */
+[type="radio"] {
+  width: 20px;
+}
+/* attribute selector 2 */
+[type="time"] {
+  margin: 0 5px;
+}
+
+/* Pseudo-class 2 */
+#time-input > div:nth-child(1) span {
+  color: rgb(249, 131, 131);
+}
+
+#time-input > div:nth-child(2) {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.932);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+#location {
+  font-size: 1.7rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#location select {
+  margin-top: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+#date-select {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#date-select p:first-child {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+#date-select > div {
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+#date-select > #date {
+  margin-top: 10px;
+  color: rgb(99, 168, 46);
+  font-size: 1.3rem;
+}
+
+#time-select {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#time-select p:first-child {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+#time-select > div {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+#time-select > #time-error {
+  color: rgb(252, 121, 121);
+  font-size: 1.2rem;
+}
+
+#time-input button {
+  margin-top: 10px;
+  width: 300px;
+  height: 50px;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#data-loading {
+  display: none;
+  padding: 10px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.913);
+  width: 300px;
+  border-radius: 10px;
+}
+
+#data-output {
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+#weather-result {
+  width: 600px;
+  background-color: rgba(255, 255, 255, 0.854);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+/* Float 활용 */
+#weather-result li {
+  float: left;
+  margin-left: 16px;
+}
+
+#weather-result li div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* combinator 4 */
+#weather-result .info-title + p {
+  font-size: 2.7rem;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.rain-img {
+  width: 100px;
+  height: 80px;
+}
+
+/* combinator 5 */
+.rain-img + p {
+  font-size: 1.3rem;
+  margin-top: 5px;
+}
+
+#data-output > div:nth-child(2) {
+  border-radius: 10px;
+  padding: 10px;
+  width: 900px;
+  justify-content: space-evenly;
+  margin-bottom: 30px;
+}
+
 #weather-info {
   display: flex;
+  width: 60%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#weather-info > div > div {
+  width: 250px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#weather-info > div > div:first-child {
+  border-right: 3px solid rgb(182, 153, 138);
+}
+
+#weather-info > div > div > div {
+  display: flex;
+  align-items: center;
+}
+
+#weather-info > div {
+  display: flex;
+  align-items: center;
+}
+
+#data-result {
+  display: flex;
+}
+
+#data-result > div:first-child {
+  border-radius: 15px;
+  background-color: white;
+  margin: 0 10px;
+  padding: 10px;
+}
+
+#ad-info {
+  display: flex;
+  width: 40%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#ad-info > div {
+  background-color: white;
+  width: 300px;
+  height: 200px;
+  border-radius: 15px;
+  padding: 10px;
 }
 
 #high div {
@@ -32,12 +293,64 @@ header h1 {
 }
 
 .window {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 150px;
   overflow: hidden;
 }
 
 .clothes-img {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 150px;
+}
+
+.next,
+.prev {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.next:hover,
+.prev:hover {
+  color: lightcoral;
+}
+
+#rain,
+#dust {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#rain-img {
+  height: 130px;
+}
+
+#dust-img {
+  height: 130px;
+}
+
+/* pseudo-element 1 */
+#rain p.info-title::before {
+  content: "⛱️ ";
+}
+
+/* pseudo-element 2 */
+#dust p.info-title::before {
+  content: "😷 ";
+}
+
+/* 모바일 환경 대응 구현 */
+@media (max-width: 900px) {
+  #data-result {
+    flex-wrap: wrap;
+  }
+
+  #rain {
+    margin-top: 20px;
+  }
+
+  #dust {
+    margin-top: 20px;
+  }
 }

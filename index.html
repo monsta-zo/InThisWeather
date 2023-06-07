@@ -13,122 +13,212 @@
     <link rel="stylesheet" href="./main.css" />
   </head>
   <body>
-    <header><h1>오늘 같은 날엔</h1></header>
+    <!-- Semantic 활용 1 -->
+    <header>
+      <div><p class="title">In This Weather</p></div>
+      <p>Scroll</p>
+      <p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="35"
+          height="35"
+          fill="currentColor"
+          class="bi bi-chevron-double-down"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      </p>
+    </header>
+
+    <!-- Semantic 활용 2 -->
     <main>
       <!-- 지역, 날짜, 시간 입력 -->
       <div id="time-input">
-        <label for="location-select">활동 지역</label>
-        <select name="locations" id="location-select">
-          <option value="geumjeong">금정구</option>
-          <option value="jung">중구</option>
-          <option value="seo">서구</option>
-          <option value="dong">동구</option>
-          <option value="yeongdo">영도구</option>
-          <option value="busanjin">부산진구</option>
-          <option value="dongrae">동래구</option>
-          <option value="nam">남구</option>
-          <option value="buk">북구</option>
-          <option value="haeundae">해운대구</option>
-          <option value="saha">사하구</option>
-          <option value="gangseo">강서구</option>
-          <option value="yeonje">연제구</option>
-          <option value="suyeong">수영구</option>
-          <option value="sasang">사상구</option>
-          <option value="gijang">기장군</option>
-        </select>
         <div>
-          <input
-            type="radio"
-            id="today"
-            name="day"
-            checked
-            onclick="showDate('today')"
-          />
-          <label for="today">오늘</label>
-          <input
-            type="radio"
-            id="tomorrow"
-            name="day"
-            onclick="showDate('tomorrow')"
-          />
-          <label for="tomorrow">내일</label>
-          <input
-            type="radio"
-            id="after-tomorrow"
-            name="day"
-            onclick="showDate('after-tomorrow')"
-          />
-          <label for="after-tomorrow">모래</label>
+          <p class="info-title">날씨에 맞는 옷차림은?</p>
+
+          <p>외출 하기 전, 오늘의 날씨 정보를 확인하고</p>
+          <p>그에 맞는 <span>옷차림</span>을 추천 받으세요</p>
         </div>
-        <p id="date"></p>
+
         <div>
-          <input type="time" id="start-time" />
-          <span>~</span>
-          <input type="time" id="end-time" />
+          <div id="location">
+            <label for="location-select" class="info-title">지역</label>
+            <!-- Input 1 : select -->
+            <select name="locations" id="location-select">
+              <option value="geumjeong">금정구</option>
+              <option value="jung">중구</option>
+              <option value="seo">서구</option>
+              <option value="dong">동구</option>
+              <option value="yeongdo">영도구</option>
+              <option value="busanjin">부산진구</option>
+              <option value="dongrae">동래구</option>
+              <option value="nam">남구</option>
+              <option value="buk">북구</option>
+              <option value="haeundae">해운대구</option>
+              <option value="saha">사하구</option>
+              <option value="gangseo">강서구</option>
+              <option value="yeonje">연제구</option>
+              <option value="suyeong">수영구</option>
+              <option value="sasang">사상구</option>
+              <option value="gijang">기장군</option>
+            </select>
+          </div>
+
+          <div id="date-select">
+            <p class="info-title">날짜</p>
+            <div>
+              <!-- Input 2 : radio -->
+              <input
+                type="radio"
+                id="today"
+                name="day"
+                checked
+                onclick="showDate('today')"
+              />
+              <label for="today">오늘</label>
+              <input
+                type="radio"
+                id="tomorrow"
+                name="day"
+                onclick="showDate('tomorrow')"
+              />
+              <label for="tomorrow">내일</label>
+              <input
+                type="radio"
+                id="after-tomorrow"
+                name="day"
+                onclick="showDate('after-tomorrow')"
+              />
+              <label for="after-tomorrow">모래</label>
+            </div>
+
+            <p id="date"></p>
+          </div>
+
+          <div id="time-select">
+            <p class="info-title">시간</p>
+            <div>
+              <!-- Input 3 : time -->
+              <input type="time" id="start-time" />
+              <span>~</span>
+              <input type="time" id="end-time" />
+            </div>
+
+            <p id="time-error"></p>
+          </div>
+
+          <button onclick="getData()">확인</button>
         </div>
-        <p id="time-error"></p>
-        <button onclick="getData()">조회</button>
+        <div id="data-loading">
+          <p id="loading"></p>
+        </div>
       </div>
+
       <!-- 조회 결과 출력 -->
       <div id="data-output">
-        <p id="loading"></p>
-        <div id="weather-info">
-          <div id="high">
-            <p id="high-temp"></p>
-            <div class="outer">
-              <div class="prev" onclick="prevItem(event)">&#60;</div>
-              <div class="window">
-                <div class="clothes"></div>
-              </div>
-              <div class="next" onclick="nextItem(event)">&#62;</div>
+        <!-- List 활용 -->
+        <ul id="weather-result">
+          <li>
+            <div>
+              <p class="info-title">최저 기온</p>
+              <p id="low-temp"></p>
             </div>
-            <div class="top">
-              <div class="prev" onclick="prevItem(event)">&#60;</div>
-              <div class="window">
-                <div class="clothes"></div>
-              </div>
-              <div class="next" onclick="nextItem(event)">&#62;</div>
+          </li>
+          <li>
+            <div>
+              <p class="info-title">최고 기온</p>
+              <p id="high-temp"></p>
             </div>
-            <div class="bottom">
-              <div class="prev" onclick="prevItem(event)">&#60;</div>
-              <div class="window">
-                <div class="clothes"></div>
+          </li>
+          <li>
+            <div>
+              <p class="info-title">강수 확률</p>
+              <img class="rain-img" src="" alt="" />
+              <p id="rain-info"></p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <p class="info-title">미세 먼지</p>
+              <p id="dust-info"></p>
+            </div>
+          </li>
+        </ul>
+        <div id="data-result">
+          <div id="weather-info">
+            <p class="info-title">기온에 맞는 옷차림</p>
+            <div>
+              <div id="high">
+                <p class="info-title">최고 기온 기준</p>
+                <div class="outer">
+                  <div class="prev" onclick="prevItem(event)">&#60;</div>
+                  <div class="window">
+                    <div class="clothes"></div>
+                  </div>
+                  <div class="next" onclick="nextItem(event)">&#62;</div>
+                </div>
+                <div class="top">
+                  <div class="prev" onclick="prevItem(event)">&#60;</div>
+                  <div class="window">
+                    <div class="clothes"></div>
+                  </div>
+                  <div class="next" onclick="nextItem(event)">&#62;</div>
+                </div>
+                <div class="bottom">
+                  <div class="prev" onclick="prevItem(event)">&#60;</div>
+                  <div class="window">
+                    <div class="clothes"></div>
+                  </div>
+                  <div class="next" onclick="nextItem(event)">&#62;</div>
+                </div>
               </div>
-              <div class="next" onclick="nextItem(event)">&#62;</div>
+              <div id="low">
+                <p class="info-title">최저 기온 기준</p>
+                <div class="outer">
+                  <div class="prev" onclick="prevItem(event)">&#60;</div>
+                  <div class="window">
+                    <div class="clothes"></div>
+                  </div>
+                  <div class="next" onclick="nextItem(event)">&#62;</div>
+                </div>
+                <div class="top">
+                  <div class="prev" onclick="prevItem(event)">&#60;</div>
+                  <div class="window">
+                    <div class="clothes"></div>
+                  </div>
+                  <div class="next" onclick="nextItem(event)">&#62;</div>
+                </div>
+                <div class="bottom">
+                  <div class="prev" onclick="prevItem(event)">&#60;</div>
+                  <div class="window">
+                    <div class="clothes"></div>
+                  </div>
+                  <div class="next" onclick="nextItem(event)">&#62;</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div id="low">
-            <p id="low-temp"></p>
-            <div class="outer">
-              <div class="prev" onclick="prevItem(event)">&#60;</div>
-              <div class="window">
-                <div class="clothes"></div>
-              </div>
-              <div class="next" onclick="nextItem(event)">&#62;</div>
+          <div id="ad-info">
+            <div id="rain">
+              <p class="info-title">우산이 필요할까요?</p>
+              <img id="rain-img" src="" alt="" />
+              <p id="rain-message"></p>
             </div>
-            <div class="top">
-              <div class="prev" onclick="prevItem(event)">&#60;</div>
-              <div class="window">
-                <div class="clothes"></div>
-              </div>
-              <div class="next" onclick="nextItem(event)">&#62;</div>
-            </div>
-            <div class="bottom">
-              <div class="prev" onclick="prevItem(event)">&#60;</div>
-              <div class="window">
-                <div class="clothes"></div>
-              </div>
-              <div class="next" onclick="nextItem(event)">&#62;</div>
+            <div id="dust">
+              <p class="info-title">어떤 마스크를 착용하죠?</p>
+              <img id="dust-img" src="" alt="" />
+              <p id="dust-message"></p>
             </div>
           </div>
-        </div>
-        <div id="rain">
-          <p id="rain-info"></p>
-          <p id="rain-message"></p>
-        </div>
-        <div id="dust">
-          <p id="dust-info"></p>
-          <p id="dust-message"></p>
         </div>
       </div>
     </main>
